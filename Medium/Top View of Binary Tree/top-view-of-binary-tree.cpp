@@ -99,57 +99,39 @@ struct Node
 */
 class Solution
 {
-    unordered_map<Node*,int> mapping;
-    int mini=INT_MAX;
-    int maxi=INT_MIN;
-    
-    void mapNodes(Node* root, int num){
-        if(root==NULL){
-            return;
-        }
-        if(num<mini){
-            mini=num;
-        }
-        if(num>maxi){
-            maxi=num;
-        }
-        mapping[root]=num;
-        
-        mapNodes(root->left,num-1);
-        mapNodes(root->right,num+1);
-    }
-    void levelOrderTraversal(Node *root,vector<int> &sol){
-        queue<Node*> q;
-        q.push(root);
-        
-        while(!q.empty()){
-            Node* curr=q.front();
-            
-            int index=mapping[curr]-mini;
-            if(sol[index]==0){
-                sol[index]=curr->data;
-            }
-            if(curr->left){
-                q.push(curr->left);
-            }
-            if(curr->right){
-                q.push(curr->right);
-            }
-            q.pop();
-        }
-    }
     public:
     vector<int> topView(Node *root)
     {
-        vector<int> sol;
+        vector<int> ans;
         if(root==NULL){
-            return sol;
+            return ans;
         }
-        mapNodes(root,0);
-        sol.resize(maxi-mini+1);
-        levelOrderTraversal(root,sol);
         
-        return sol;
+        map<int,int> mapping;   //for horizontal distance and data representation
+        queue<pair<Node*,int> > q;
+        
+        q.push(make_pair(root,0));
+        
+        while(!q.empty()){
+            pair<Node*,int> curr=q.front();
+            Node* currentNode=curr.first;
+            int hd=curr.second; // represent the 0 or -1 or 1 or -2 etc horizontal distance
+            if(mapping[hd]==0){
+                mapping[hd]=currentNode->data;
+            }
+            
+            if(currentNode->left){
+                q.push(make_pair(currentNode->left,hd-1));
+            }
+            if(currentNode->right){
+                q.push(make_pair(currentNode->right,hd+1));
+            }
+            q.pop();
+        }
+        for(auto i:mapping){
+            ans.push_back(i.second);
+        }
+        return ans;
     }
 
 };

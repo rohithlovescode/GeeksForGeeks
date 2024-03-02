@@ -24,6 +24,25 @@ class Solution{
         dp[V]=mini;
         return dp[V];
     }
+    int solveTab(vector<int> & coins, int V){
+        vector<int> dp(V+1,0);
+        dp[0]=0;
+        int n=coins.size();
+        for(int i=1;i<=V;i++){
+            int mini=INT_MAX;
+            for(int j=0;j<n;j++){
+                if(i-coins[j]>=0&&dp[i-coins[j]]!=INT_MAX){
+                    mini=min(mini,dp[i-coins[j]]+1);
+                }
+            }
+            
+            dp[i]=mini;
+        }
+        if(dp[V]==INT_MAX){
+            return -1;
+        }
+        return dp[V];
+    }
 	public:
 	int minCoins(vector<int> &coins, int M, int V) 
 	{ 

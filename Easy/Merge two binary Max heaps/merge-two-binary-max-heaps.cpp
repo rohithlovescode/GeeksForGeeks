@@ -11,45 +11,39 @@ using namespace std;
 // User function Template for C++
 
 class Solution{
-    void heapify(vector<int>& heap,int index){
-        int left=2*index;
-        int right=2*index+1;
+    void heapify(vector<int> & sol,int index){
+        int left=2*index+1;
+        int right=2*index+2;
         
         int largest=index;
         
-        if(left<heap.size()&&heap[left]>heap[largest]){
+        if(left<sol.size()&&sol[largest]<sol[left]){
             largest=left;
         }
-        
-        if(right<heap.size()&&heap[right]>heap[largest]){
+        if(right<sol.size()&&sol[largest]<sol[right]){
             largest=right;
         }
         
         if(largest!=index){
-            swap(heap[largest],heap[index]);
-            heapify(heap,largest);
+            swap(sol[largest],sol[index]);
+            
+            heapify(sol,largest);
         }
-        
     }
     public:
     vector<int> mergeHeaps(vector<int> &a, vector<int> &b, int n, int m) {
-        // your code here
-        vector<int> ans;
-        ans.push_back(0);
-        
+        vector<int> sol;
         for(int i=0;i<n;i++){
-            ans.push_back(a[i]);
+            sol.push_back(a[i]);
         }
         for(int j=0;j<m;j++){
-            ans.push_back(b[j]);
+            sol.push_back(b[j]);
         }
-        
         int size=m+n;
-        for(int i=size/2;i>0;i--){
-            heapify(ans,i);
+        for(int i=size/2-1;i>=0;i--){
+            heapify(sol,i);
         }
-        ans.erase(ans.begin());
-        return ans;
+        return sol;
     }
 };
 

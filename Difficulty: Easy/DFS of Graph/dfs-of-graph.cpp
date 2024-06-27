@@ -7,32 +7,33 @@ class Solution {
   public:
     // Function to return a list containing the DFS traversal of the graph.
     vector<int> dfsOfGraph(int V, vector<int> adj[]) {
+        // Code here
+        vector<int> sol;
         stack<int> s;
-        vector<bool> visited(V,false);
-        vector<int> dfs;
-        
         s.push(0);
+        sol.push_back(0);
+        unordered_map<int,bool> visited;
+        visited[0]=true;
+        
         while(!s.empty()){
             int top=s.top();
-            if(!visited[top])
-                dfs.push_back(top);
-            visited[top]=true;
             
-            bool temp=false;
-            for(auto i: adj[top]){
-                if(!visited[i]){
-                    s.push(i);
-                    temp=true;
+            
+            int n=adj[top].size();
+            for(int i=0;i<n;i++){
+                int curr=adj[top][i];
+                if(!visited[curr]){
+                    visited[curr]=true;
+                    sol.push_back(curr);
+                    s.push(curr);
                     break;
                 }
             }
-            
-            if(temp){
-                continue;
+            if(top==s.top()){
+                s.pop();
             }
-            s.pop();
         }
-        return dfs;
+        return sol;
     }
 };
 

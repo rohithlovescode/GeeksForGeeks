@@ -8,42 +8,42 @@ class Solution
 	public:
     vector<int> topoSort(int V, vector<int> adj[]) 
     {
-        stack<int> s;
-        stack<int> ans;
+        
         map<int, bool> visited;
-
-        // Iterate through all vertices to handle disconnected graphs
-        for (int start = 0; start < V; start++) {
-            if (!visited[start]) {
-                s.push(start);
-                visited[start] = true;
-
-                while (!s.empty()) {
-                    int top = s.top();
-
-                    bool allVisited = true;
-                    for (int i = 0; i < adj[top].size(); i++) {
-                        int curr = adj[top][i];
-                        if (!visited[curr]) {
-                            visited[curr] = true;
-                            s.push(curr);
-                            allVisited = false;
-                            break;
-                        }
-                    }
-
-                    if (allVisited) {
-                        ans.push(top);
-                        s.pop();
-                    }
-                }
+        queue<int> q;
+        vector<int> indegree(V,0);
+        map<int,bool> inQueue;
+        
+        for(int i=0;i<V;i++){
+            for(int j=0;j<adj[i].size();j++){
+                indegree[adj[i][j]]++;
             }
         }
-
+        
+        //pushing everything with indegree 0
+        for(int i=0;i<V;i++){
+            if(indegree[i]==0){
+                q.push(i);
+                inQueue[i]=true;
+            }
+        }
+        
+        
         vector<int> sol;
-        while (!ans.empty()) {
-            sol.push_back(ans.top());
-            ans.pop();
+        while(!q.empty()){
+            int front=q.front();
+            sol.push_back(front);
+            visited[front]=true;
+            q.pop();
+            //now we need to update the inorder then add all those with indegree 0
+            for(int i=0;i<adj[front].size();i++){
+                int node=adj[front][i];
+                indegree[node]--;
+                if(indegree[node]==0&&!inQueue[node]){
+                    q.push(node);
+                }
+            }
+            
         }
         return sol;
     }

@@ -5,48 +5,35 @@ using namespace std;
 // } Driver Code Ends
 class Solution
 {
-	public:
-    vector<int> topoSort(int V, vector<int> adj[]) 
-    {
+    private:
+    void dfs(vector<int> adj[],stack<int> &st,map<int,bool> & vis,int node){
+        vis[node]=true;
         
-        map<int, bool> visited;
-        queue<int> q;
-        vector<int> indegree(V,0);
-        map<int,bool> inQueue;
-        
-        for(int i=0;i<V;i++){
-            for(int j=0;j<adj[i].size();j++){
-                indegree[adj[i][j]]++;
-            }
+        for(auto it: adj[node]){
+            if(!vis[it])
+                dfs(adj,st,vis,it);
         }
-        
-        //pushing everything with indegree 0
-        for(int i=0;i<V;i++){
-            if(indegree[i]==0){
-                q.push(i);
-                inQueue[i]=true;
-            }
-        }
-        
-        
-        vector<int> sol;
-        while(!q.empty()){
-            int front=q.front();
-            sol.push_back(front);
-            visited[front]=true;
-            q.pop();
-            //now we need to update the inorder then add all those with indegree 0
-            for(int i=0;i<adj[front].size();i++){
-                int node=adj[front][i];
-                indegree[node]--;
-                if(indegree[node]==0&&!inQueue[node]){
-                    q.push(node);
-                }
-            }
-            
-        }
-        return sol;
+        st.push(node);
     }
+	public:
+	//Function to return list containing vertices in Topological order.
+	vector<int> topoSort(int V, vector<int> adj[]) 
+	{
+	    stack<int> st;
+	    map<int,bool> vis;
+	    
+	    for(int i=0;i<V;i++){
+	        if(!vis[i])
+	            dfs(adj,st,vis,i);
+	    }
+	    vector<int> sol;
+	    
+	    while(!st.empty()){
+	        sol.push_back(st.top());
+	        st.pop();
+	    }
+	    return sol;
+	}
 };
 
 //{ Driver Code Starts.
